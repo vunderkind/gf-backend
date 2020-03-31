@@ -1,5 +1,4 @@
-
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('beneficiaries', tbl => {
         tbl.increments();
         tbl.text('firstName', 128).notNullable();
@@ -16,13 +15,10 @@ exports.up = function(knex, Promise) {
         tbl.string('socialMedia').unique();
         tbl.boolean('isVerified');
         tbl.timestamp('created_at').defaultTo(knex.fn.now());
-
-        
     })
-  
+
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTableIfExists('beneficiaries');
-  
 };
