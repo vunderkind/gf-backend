@@ -44,54 +44,54 @@ router.get('/people/:id', (req, res) => {
 // })
 
 
-router.post('/people', (req, res) => {
-  const infoData = req.body;
+// router.post('/people', (req, res) => {
+//   const infoData = req.body;
 
-  Beneficiaries.add(infoData)
-  .then(info => {
-    res.status(201).json({Success: "New info updated!"});
-  })
-  .catch (err => {
-    res.status(500).json({ message: err.message });
-  });
-});
+//   Beneficiaries.add(infoData)
+//   .then(info => {
+//     res.status(201).json({Success: "New info updated!"});
+//   })
+//   .catch (err => {
+//     res.status(500).json({ message: err.message });
+//   });
+// });
 
 
 
-router.put('/people/:id', (req, res) => {
-  const { id } = req.params;
-  const changes = req.body;
+// router.put('/people/:id', (req, res) => {
+//   const { id } = req.params;
+//   const changes = req.body;
 
-  Beneficiaries.findById(id)
-  .then(info => {
-    if (info) {
-      Beneficiaries.update(changes, id)
-      .then(updatedinfo => {
-        res.json({message: `Successfully updated!`});
-      });
-    } else {
-      res.status(404).json({ message: 'Could not find info with given id' });
-    }
-  })
-  .catch (err => {
-    res.status(500).json({ message: 'Failed to update info' });
-  });
-});
+//   Beneficiaries.findById(id)
+//   .then(info => {
+//     if (info) {
+//       Beneficiaries.update(changes, id)
+//       .then(updatedinfo => {
+//         res.json({message: `Successfully updated!`});
+//       });
+//     } else {
+//       res.status(404).json({ message: 'Could not find info with given id' });
+//     }
+//   })
+//   .catch (err => {
+//     res.status(500).json({ message: 'Failed to update info' });
+//   });
+// });
 
-router.delete('/people/:id', (req, res) => {
-  const { id } = req.params;
+// router.delete('/people/:id', (req, res) => {
+//   const { id } = req.params;
 
-  Beneficiaries.remove(id)
-  .then(deleted => {
-    if (deleted) {
-      res.json({ removed: deleted });
-    } else {
-      res.status(404).json({ message: 'Could not find info with given id' });
-    }
-  })
-  .catch(err => {
-    res.status(500).json({ message: 'Failed to delete info' });
-  });
-});
+//   Beneficiaries.remove(id)
+//   .then(deleted => {
+//     if (deleted) {
+//       res.json({ removed: deleted });
+//     } else {
+//       res.status(404).json({ message: 'Could not find info with given id' });
+//     }
+//   })
+//   .catch(err => {
+//     res.status(500).json({ message: 'Failed to delete info' });
+//   });
+// });
 
 module.exports = router;
