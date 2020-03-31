@@ -2,6 +2,9 @@ const express = require('express');
 // const bcrypt = require('bcryptjs');
 
 const Beneficiaries = require('./beneficiary-model.js');
+const {
+  updateNumberColumn
+} = require('../helpers/utils')
 
 const router = express.Router();
 
@@ -68,7 +71,6 @@ router.post('/people', (req, res) => {
     });
 });
 
-
 router.put('/people/:id', (req, res) => {
   const {
     id
@@ -82,7 +84,13 @@ router.put('/people/:id', (req, res) => {
   Beneficiaries.findById(id)
     .then(info => {
       if (info) {
-        Beneficiaries.update(changes, id)
+        const updates = {
+          ...changes,
+          donationCount: updateNumberColumn(changes, info, 'donationCount'),
+          donationAmount: updateNumberColumn(changes, info, 'donationAmount')
+        }
+
+        Beneficiaries.update(updates, id)
           .then(updatedinfo => {
             res.json({
               message: `Successfully updated!`
