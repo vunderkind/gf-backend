@@ -5,6 +5,6 @@ const beneficiaryRouter = require('./model/beneficiary-router');
 const server = express();
 
 server.use(express.json());
-server.use('/api/people', beneficiaryRouter);
+server.use('/api/', beneficiaryRouter);
 
 module.exports = server;

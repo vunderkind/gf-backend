@@ -1,8 +1,15 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 
 const Beneficiaries = require('./beneficiary-model.js');
 
 const router = express.Router();
+
+const credentials = req.body;
+
+const hash = bcrypt.hashSync(credentials.password, 14);
+
+credentials.password = hash;
 
 router.get('/', (req, res) => {
   Beneficiaries.find()
@@ -30,55 +37,61 @@ router.get('/:id', (req, res) => {
   });
 });
 
+// router.post('/login', (req,res) => {
+//   let {username, password} = req.body;
 
-router.post('/', (req, res) => {
-  const infoData = req.body;
-
-  Beneficiaries.add(infoData)
-  .then(info => {
-    res.status(201).json({Success: "New info updated!"});
-  })
-  .catch (err => {
-    res.status(500).json({ message: err.message });
-  });
-});
+  
+// })
 
 
+// router.post('/people', (req, res) => {
+//   const infoData = req.body;
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const changes = req.body;
+//   Beneficiaries.add(infoData)
+//   .then(info => {
+//     res.status(201).json({Success: "New info updated!"});
+//   })
+//   .catch (err => {
+//     res.status(500).json({ message: err.message });
+//   });
+// });
 
-  Beneficiaries.findById(id)
-  .then(info => {
-    if (info) {
-      Beneficiaries.update(changes, id)
-      .then(updatedinfo => {
-        res.json({message: `Successfully updated!`});
-      });
-    } else {
-      res.status(404).json({ message: 'Could not find info with given id' });
-    }
-  })
-  .catch (err => {
-    res.status(500).json({ message: 'Failed to update info' });
-  });
-});
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
 
-  Beneficiaries.remove(id)
-  .then(deleted => {
-    if (deleted) {
-      res.json({ removed: deleted });
-    } else {
-      res.status(404).json({ message: 'Could not find info with given id' });
-    }
-  })
-  .catch(err => {
-    res.status(500).json({ message: 'Failed to delete info' });
-  });
-});
+// router.put('/people/:id', (req, res) => {
+//   const { id } = req.params;
+//   const changes = req.body;
+
+//   Beneficiaries.findById(id)
+//   .then(info => {
+//     if (info) {
+//       Beneficiaries.update(changes, id)
+//       .then(updatedinfo => {
+//         res.json({message: `Successfully updated!`});
+//       });
+//     } else {
+//       res.status(404).json({ message: 'Could not find info with given id' });
+//     }
+//   })
+//   .catch (err => {
+//     res.status(500).json({ message: 'Failed to update info' });
+//   });
+// });
+
+// router.delete('/people/:id', (req, res) => {
+//   const { id } = req.params;
+
+//   Beneficiaries.remove(id)
+//   .then(deleted => {
+//     if (deleted) {
+//       res.json({ removed: deleted });
+//     } else {
+//       res.status(404).json({ message: 'Could not find info with given id' });
+//     }
+//   })
+//   .catch(err => {
+//     res.status(500).json({ message: 'Failed to delete info' });
+//   });
+// });
 
 module.exports = router;
