@@ -1,17 +1,17 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 const Beneficiaries = require('./beneficiary-model.js');
 
 const router = express.Router();
 
-const credentials = req.body;
+// const credentials = req.body;
 
-const hash = bcrypt.hashSync(credentials.password, 14);
+// const hash = bcrypt.hashSync(credentials.password, 14);
 
-credentials.password = hash;
+// credentials.password = hash;
 
-router.get('/', (req, res) => {
+router.get('/people', (req, res) => {
   Beneficiaries.find()
   .then(Beneficiaries => {
     res.json(Beneficiaries);
@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/people/:id', (req, res) => {
   const { id } = req.params;
 
   Beneficiaries.findById(id)
