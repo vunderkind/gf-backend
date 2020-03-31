@@ -13,7 +13,7 @@ const server = express();
 server.use(cors())
 server.use(helmet())
 server.use(express.json());
-server.use(basicAuth)
+// server.use(basicAuth)
 server.use('/api/', beneficiaryRouter);
 
 // handle not found errors
