@@ -1,6 +1,7 @@
 const express = require('express');
-const cors = require('cors')
-const helmet = require('helmet')
+const cors = require('cors');
+const helmet = require('helmet');
+const mg = require('mongoose');
 const {
   basicAuth
 } = require('./helpers/auth')
@@ -9,6 +10,15 @@ const beneficiaryRouter = require('./model/beneficiary-router');
 
 const server = express();
 
+if (process.env.MONGODB_URI) {
+  const mgConnectOptions = {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  };
+  mg.connect(process.env.MONGODB_URI, mgConnectOptions);
+}
 
 server.use(cors())
 server.use(helmet())
