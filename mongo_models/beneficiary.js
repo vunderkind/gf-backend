@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
-const modelName = 'users';
+const modelName = 'beneficiary';
 const { Schema } = mongoose;
 const schemaConfig = {
   firstName: String,
   lastName: String,
   phone: String,
-  isWhatsapp: String,
+  isWhatsApp: String,
+  isDeleted: Number,
   email: {
-    type: String,
-    unique: true
+    type: String
   },
   context: String,
   bankName: String,
@@ -19,8 +19,10 @@ const schemaConfig = {
   socialMedia: {
     type: Schema.Types.Mixed //Mixed so we can store multiple
   },
-  isVerified: Boolean,
-  created_at: Number,
+  isVerified: String,
+  created_at: String,
+  created_ts: Number,
+  deleted_at: String,
   donationAmount: 0,
   donationCount: 0
 };

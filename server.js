@@ -7,6 +7,7 @@ const {
 } = require('./helpers/auth')
 
 const beneficiaryRouter = require('./model/beneficiary-router');
+const v1Routes = require('./routes/v1');
 
 const server = express();
 
@@ -25,6 +26,10 @@ server.use(helmet())
 server.use(express.json());
 // server.use(basicAuth)
 server.use('/api/', beneficiaryRouter);
+
+//Mongo routes
+//To be reviewed
+server.use('/api/v1/', v1Routes);
 
 // handle not found errors
 server.use((req, res, next) => {
