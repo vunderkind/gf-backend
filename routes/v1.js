@@ -4,31 +4,7 @@ const router = express.Router();
 const beneficiaryService = require('../services/beneficiaries');
 const userService = require('../services/users');
 
-const authVerifClosure = (allowed_roles = {}) => {
-  return async (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) {
-      res.status(401).json({
-        message: 'Unauthorized access'
-      });
-      return;
-    }
-    try {
-
-      const authUser = await userService.verify({
-        token: token.replace('bearer ', ''),
-        allowed_roles
-      });
-      req.authUser = authUser;
-      next();
-    } catch (e) {
-      res.status(500).json({
-        message: e.message
-      })
-    }
-    
-  }
-}
+const authVerifClosure = require('../middlewares/authverifclosure');
 
 router.post('/admin/login', async (req, res) => {
   try {
