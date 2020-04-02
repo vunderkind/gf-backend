@@ -2,7 +2,55 @@ const express = require('express');
 const router = express.Router();
 
 const beneficiaryService = require('../services/beneficiaries');
+const userService = require('../services/users');
 
+const authVerifClosure = (allowed_roles = {}) => {
+  return async (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) {
+      res.status(401).json({
+        message: 'Unauthorized access'
+      });
+      return;
+    }
+    try {
+
+      const authUser = await userService.verify({
+        token: token.replace('bearer ', ''),
+        allowed_roles
+      });
+      req.authUser = authUser;
+      next();
+    } catch (e) {
+      res.status(500).json({
+        message: e.message
+      })
+    }
+    
+  }
+}
+
+router.post('/admin/login', async (req, res) => {
+  try {
+    const loginResponse = await userService.login(req.body);
+    res.json(loginResponse);
+  } catch (e) {
+    res.status(401).json({
+      message: e.message
+    });
+  }
+});
+
+router.post('/admin/users', async (req, res) => {
+  try {
+    const newUser = await userService.create(req.body);
+    res.json(newUser);
+  } catch (e) {
+    res.status(401).json({
+      message: e.message
+    });
+  }
+});
 
 router.get('/people', async (req, res) => {
 
@@ -52,7 +100,7 @@ router.post('/people', async (req, res) => {
 
 });
 
-router.put('/people/:id', async (req, res) => {
+router.put('/people/:id', authVerifClosure({superadmin: 1, admin: 1}), async (req, res) => {
 
   try {
     req.body.id = req.params.id;
