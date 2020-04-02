@@ -15,7 +15,7 @@ const spec = morx
   .build('bvn', 'required:1')
   .build('verificationImage', 'eg:abab')
   .build('accountNumber', 'required:1')
-  .build('accountName', 'required:1')
+  .build('accountName', 'eg:abab')
   .build('paymentLink', 'eg:wallets')
   .build('location', 'required:1')
   .build('socialMedia', 'eg:twitter')
