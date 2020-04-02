@@ -6,6 +6,7 @@ const spec = morx
   .spec({})
   .build('id', 'map:_id, eg:53928anabdna')
   .build('bankName', 'eg:gtb')
+  .build('isVerified', 'eg:gtb')
   .end();
 
 function service(data) {

@@ -12,6 +12,8 @@ const spec = morx
   .build('email', 'required:1,validastors:isEmail')
   .build('context', 'required:1')
   .build('bankName', 'required:1')
+  .build('bvn', 'required:1')
+  .build('verificationImage', 'eg:abab')
   .build('accountNumber', 'required:1')
   .build('accountName', 'required:1')
   .build('paymentLink', 'eg:wallets')

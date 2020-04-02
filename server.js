@@ -21,7 +21,20 @@ if (process.env.MONGODB_URI) {
   mg.connect(process.env.MONGODB_URI, mgConnectOptions);
 }
 
-server.use(cors())
+if (process.env.USE_CUSTOM_CORS) {
+  server.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, requestId',
+    );
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  });
+
+} else {
+  server.use(cors())
+}
+
 server.use(helmet())
 server.use(express.json());
 // server.use(basicAuth)

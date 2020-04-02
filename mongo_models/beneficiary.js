@@ -16,6 +16,8 @@ const schemaConfig = {
   accountName: String,
   paymentLink: String,
   location: String,
+  bvn: String,
+  verificationImage: String,
   socialMedia: {
     type: Schema.Types.Mixed //Mixed so we can store multiple
   },
