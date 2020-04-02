@@ -9,7 +9,7 @@ const spec = morx
   .build('phone', 'required:1')
   .build('isWhatsApp', 'eg:false')
   .build('isVerified', 'eg:false')
-  .build('email', 'validastors:isEmail')
+  .build('email', 'validators:isEmail')
   .build('context', 'required:1')
   .build('bankName', 'required:1')
   .build('bvn', 'required:1')
