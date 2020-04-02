@@ -29,6 +29,7 @@ if (process.env.USE_CUSTOM_CORS) {
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, requestId',
     );
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    next();
   });
 
 } else {
