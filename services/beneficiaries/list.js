@@ -9,7 +9,7 @@ const spec = morx
   .build('isVerified', 'eg:gtb')
   .end();
 
-function service(data) {
+function service(data, is_admin) {
   const d = q.defer();
   let params = {};
 
@@ -31,10 +31,13 @@ function service(data) {
 
     //Todo: Add other filters and pagination here
     let beneficiaries = await Beneficiary[method](params, null, {
-      lean: true
+      lean: true,
+      sort: {
+        created_ts: -1
+      }
     });
 
-    if(method === 'find') {
+    if(method === 'find' && !is_admin) {
       //Return only data needed for render
       beneficiaries = beneficiaries.map(b => {
         return {

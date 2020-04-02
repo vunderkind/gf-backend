@@ -52,6 +52,20 @@ router.post('/admin/users', async (req, res) => {
   }
 });
 
+
+router.get('/admin/people', authVerifClosure({superadmin: 1, admin: 1}), async (req, res) => {
+
+  try {
+    const beneficiaries = await beneficiaryService.list(req.query, 1);
+    res.json(beneficiaries);
+  } catch (e) {
+    res.status(500).json({
+      message: 'Failed to get Beneficiaries'
+    });
+  }
+
+});
+
 router.get('/people', async (req, res) => {
 
   try {
