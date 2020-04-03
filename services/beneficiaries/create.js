@@ -34,7 +34,7 @@ function service(data) {
     params.created_ts = Date.now();
     params.donationAmount = 0;
     params.donationCount = 0;
-    //params.isVerified = "false";
+    params.isVerified = false;
     params.email = params.email || 'N/A';
 
     const newBeneficiary = await new Beneficiary(params).save();

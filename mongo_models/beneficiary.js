@@ -5,7 +5,7 @@ const schemaConfig = {
   firstName: String,
   lastName: String,
   phone: String,
-  isWhatsApp: String,
+  isWhatsApp: Boolean,
   isDeleted: Number,
   email: {
     type: String
@@ -21,7 +21,7 @@ const schemaConfig = {
   socialMedia: {
     type: Schema.Types.Mixed //Mixed so we can store multiple
   },
-  isVerified: String,
+  isVerified: Boolean,
   created_at: String,
   created_ts: Number,
   deleted_at: String,
