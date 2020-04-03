@@ -1,5 +1,5 @@
 const express = require('express');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const Beneficiaries = require('./beneficiary-model.js');
 const {
@@ -8,13 +8,15 @@ const {
 
 const router = express.Router();
 
-// const credentials = req.body;
+function protected(req, res, next) {
+  if (req.body.username==='vundie' && req.body.password==='thisismogwai') {
+    next();
+  } else {
+    res.status(401).json({ message: 'Blocked!' });
+  }
+}
 
-// const hash = bcrypt.hashSync(credentials.password, 14);
-
-// credentials.password = hash;
-
-router.get('/people', (req, res) => {
+router.get('/people',protected, (req, res) => {
   Beneficiaries.find()
     .then(Beneficiaries => {
       res.json(Beneficiaries);
