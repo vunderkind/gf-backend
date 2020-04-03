@@ -33,6 +33,7 @@
     "moment-timezone": "^0.5.13",
     "mongoose": "^5.1.1",
     "node-uuid": "^1.4.8",
+    "nodemon": "^2.0.2",
     "server": "^1.0.27",
     "sqlite3": "^4.1.1",
     "swagger-ui-express": "^2.0.13",
