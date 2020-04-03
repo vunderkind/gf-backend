@@ -6,7 +6,7 @@ const schemaConfig = {
   lastName: String,
   phone: String,
   isWhatsApp: Boolean,
-  isDeleted: Number,
+  isDeleted: Boolean,
   email: {
     type: String
   },
