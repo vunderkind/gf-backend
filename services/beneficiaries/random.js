@@ -42,6 +42,8 @@ function service(data, is_admin) {
       firstName: 1,
       lastName :1,
       bankName :1,
+      context:1, 
+      location:1,
       accountNumber :1,
       accountName :1,
       paymentLink :1
