@@ -55,6 +55,19 @@ router.get('/people', async (req, res) => {
 
 });
 
+router.get('/randomize-people', async (req, res) => {
+
+  try {
+    const beneficiaries = await beneficiaryService.randomize(req.query);
+    res.json(beneficiaries);
+  } catch (e) {
+    res.status(500).json({
+      message: 'Failed to get Beneficiaries'
+    });
+  }
+
+});
+
 router.get('/people/:id', async (req, res) => {
 
   try {
