@@ -34,12 +34,13 @@
     "mongoose": "^5.9.7",
     "morxv2": "^1.0.3",
     "node-uuid": "^1.4.8",
-    "q": "^1.5.1",
     "nodemon": "^2.0.2",
+    "q": "^1.5.1",
     "server": "^1.0.27",
     "sqlite3": "^4.1.1",
     "swagger-ui-express": "^2.0.13",
-    "sync-request": "^4.0.2"
+    "sync-request": "^4.0.2",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "acorn": "^7.1.1"
