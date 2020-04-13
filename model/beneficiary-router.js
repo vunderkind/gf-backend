@@ -18,7 +18,7 @@ user.password = 12345
 
 
 
-router.get('/people', method, (req, res) => {
+router.get('/people', (req, res) => {
   Beneficiaries.find()
     .then(Beneficiaries => {
       res.json(Beneficiaries);
@@ -30,7 +30,7 @@ router.get('/people', method, (req, res) => {
     });
 });
 
-router.get('/people/:id', method,(req, res) => {
+router.get('/people/:id', (req, res) => {
   const {
     id
   } = req.params;
