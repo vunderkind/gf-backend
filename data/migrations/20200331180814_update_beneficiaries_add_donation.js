@@ -1,7 +1,7 @@
 exports.up = function (knex, Promise) {
     return knex.schema.table('beneficiaries', tbl => {
-        tbl.float('donationAmount').defaultTo(0)
-        tbl.float('donationCount').defaultTo(0)
+        tbl.int('donationAmount').defaultTo(0)
+        tbl.int('donationCount').defaultTo(0)
     })
 };
 
