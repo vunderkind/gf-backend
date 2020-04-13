@@ -100,7 +100,7 @@ router.post('/people', method, (req, res) => {
     });
 });
 
-router.put('/people/:id', method, (req, res) => {
+router.put('/people/:id', (req, res) => {
   const {
     id
   } = req.params;
