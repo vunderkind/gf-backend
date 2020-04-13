@@ -1,5 +1,8 @@
 const express = require('express');
+const method = require('../model/method')
+let jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const secrets = require('../model/secrets')
 
 const Beneficiaries = require('./beneficiary-model.js');
 const {
@@ -8,11 +11,14 @@ const {
 
 const router = express.Router();
 
+let user = {}
+user.username = 'justin'
+user.password = 12345
 
 
 
 
-router.get('/people', (req, res) => {
+router.get('/people', method, (req, res) => {
   Beneficiaries.find()
     .then(Beneficiaries => {
       res.json(Beneficiaries);
@@ -24,7 +30,7 @@ router.get('/people', (req, res) => {
     });
 });
 
-router.get('/people/:id', (req, res) => {
+router.get('/people/:id', method,(req, res) => {
   const {
     id
   } = req.params;
@@ -46,30 +52,55 @@ router.get('/people/:id', (req, res) => {
     });
 });
 
-// router.post('/login', (req,res) => {
-//   let {username, password} = req.body;
+router.post('/login', (req, res) => {
+  let { username, password } = req.body;
+      if (user.username==username && user.password==password) {
+        const token = generateToken(user); // new line
+ 
+        // the server needs to return the token to the client
+        // this doesn't happen automatically like it happens with cookies
+        res.status(200).json({
+          message: `Welcome ${user.username}!, have a token...`,
+          token, // attach the token as part of the response
+        });
+      } else {
+        res.status(401).json({ message: 'Invalid Credentials' });
+      }
+    })
+
+function generateToken(user) {
+  const payload = {
+    subject: user.id, // sub in payload is what the token is about
+    username: user.username,
+    // ...otherData
+  };
+
+  const options = {
+    expiresIn: '1d', // show other available options in the library's documentation
+  };
+
+  // extract the secret away so it can be required and used where needed
+  return jwt.sign(payload, secrets.jwtsecret, options); // this method is synchronous
+}
 
 
-// })
+router.post('/people', method, (req, res) => {
+  const infoData = req.body;
 
+  Beneficiaries.add(infoData)
+    .then(info => {
+      res.status(201).json({
+        Success: "New info updated!"
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      });
+    });
+});
 
-// router.post('/people', (req, res) => {
-//   const infoData = req.body;
-
-//   Beneficiaries.add(infoData)
-//     .then(info => {
-//       res.status(201).json({
-//         Success: "New info updated!"
-//       });
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         message: err.message
-//       });
-//     });
-// });
-
-router.put('/people/:id', (req, res) => {
+router.put('/people/:id', method, (req, res) => {
   const {
     id
   } = req.params;
@@ -109,7 +140,7 @@ router.put('/people/:id', (req, res) => {
     });
 });
 
-router.put('/people/bulk', (req, res) => {
+router.put('/people/bulk', method, (req, res) => {
   const {
     ids,
     changes
@@ -138,7 +169,7 @@ router.put('/people/bulk', (req, res) => {
     });
 });
 
-router.delete('/people/:id', (req, res) => {
+router.delete('/people/:id', method, (req, res) => {
   const {
     id
   } = req.params;

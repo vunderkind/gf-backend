@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const mg = require('mongoose');
-const {
-  basicAuth
-} = require('./helpers/auth')
+// const {
+//   basicAuth
+// } = require('./helpers/auth')
 
 const beneficiaryRouter = require('./model/beneficiary-router');
 const v1Routes = require('./routes/v1');
