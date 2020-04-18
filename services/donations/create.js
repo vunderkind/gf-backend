@@ -1,7 +1,9 @@
 const morx = require('morxv2');
 const uuid = require('uuid')
 const q = require('q');
+const mongoose = require('mongoose');
 const Donation = require('../../mongo_models/donation');
+const Beneficiary = require('../../mongo_models/beneficiary');
 
 const spec = morx
   .spec({})
@@ -25,7 +27,12 @@ function service(data) {
     params.status = "INITIATED";
     params.reference = uuid.v4();
 
-    //TODO: Validate beneficiary_ids exist else throw error
+    const bens_valid = await validate_beneficiaries(params.beneficiary_ids);
+    if ( !bens_valid ) {
+      d.reject({
+        message: "Invalid beneficiary_ids, please retry"
+      });
+    }
 
     const newDonation = await new Donation(params).save();
 
@@ -41,6 +48,30 @@ function service(data) {
 
   return d.promise;
 }
+
+async function validate_beneficiaries( beneficiary_ids ) {
+  let isValid = false;
+
+  try {
+    beneficiary_ids = beneficiary_ids.map(id => {
+      return mongoose.Types.ObjectId(id);
+    });
+  } catch (e) {
+    return isValid;
+  }
+
+  let beneficiaries = await Beneficiary.find({
+    '_id': {
+      $in: beneficiary_ids
+    }
+  });
+  
+  if( beneficiaries.length === beneficiary_ids.length ) {
+    isValid = true;
+  }
+
+  return isValid;
+}  
 
 service.morxspc = spec;
 module.exports = service;
