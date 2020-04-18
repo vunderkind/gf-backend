@@ -38,19 +38,17 @@ function service(data) {
       d.resolve( clientDonationRecord(donation) );
     } else {
       // validate payment from provider & update records
-      validate_payment(donation).then(async (res) => {
-        if( res.code !== 400 ) {
-          // 400 - will usually occur when the user never completed payment
-          // we don't want to mark initiations as failed
-          donation.status = res.status;
-        }
-        donation.memo = res.gw_response;
-        await donation.save();
+      const donation_res = await validate_payment(donation);
 
-        d.resolve( clientDonationRecord(donation) );
-      }).catch((err) => {
-        d.reject("Unable to validate payment");
-      });
+      if( donation_res.code !== 400 && donation_res.code !== 500 ) {
+        // 400 - will usually occur when the user never completed payment
+        // we don't want to mark initiations as failed
+        donation.status = donation_res.status;
+      }
+      donation.memo = donation_res.gw_response;
+      await donation.save();
+
+      d.resolve( clientDonationRecord(donation) );
     }
   })
   .catch((e) => {
@@ -85,12 +83,13 @@ async function validate_payment(donation) {
 
   let result = {};
 
-  await axios.post(process.env.FLW_VERIFY_ENDPOINT, body, config)
-  .then(function(res) {
-    const payment_info = res.data.data;
+  try {
+    const flwResponse = await axios.post(process.env.FLW_VERIFY_ENDPOINT, body, config);
+
+    const payment_info = flwResponse.data.data;
 
     result = {
-      "code": res.status
+      "code": flwResponse.status
     };
 
     if (payment_info.status === "successful" && payment_info.chargecode == 00) {
@@ -111,16 +110,23 @@ async function validate_payment(donation) {
           "paymenttype": payment_info.paymenttype
         })
     }
-
-  }).catch(function (error) {
-    // Prepsre response
-    result = {
-      "code": error.response.status,
-      "status": "FAILED",
-      "message": error.response.data.message,
-      "gw_response": JSON.stringify(error.response.data.data)
+  } catch (error) {
+    if( error.isAxiosError == true ) {
+      result = {
+        "code": error.response.status,
+        "status": "FAILED",
+        "message": error.response.data.message,
+        "gw_response": JSON.stringify(error.response.data.data)
+      }
+    } else {
+      console.log("Donation validation error");
+      console.log( error );
+      result = {
+        "code": 500,
+        "gw_response": "Unable to make/handle payment validation request"
+      }
     }
-  });
+  };
 
   return result;
 }
