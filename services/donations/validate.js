@@ -92,7 +92,7 @@ async function validate_payment(donation) {
       "code": flwResponse.status
     };
 
-    if (payment_info.status === "successful" && payment_info.chargecode == 00) {
+    if (payment_info.status === "successful") {
         //check if the amount is same as amount you wanted to charge just to be very sure
         if (parseInt(payment_info.amount) === donation.amount ) {
           result['status'] = "SUCCESS"
