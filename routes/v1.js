@@ -125,4 +125,18 @@ router.post('/donations', async (req, res) => {
   }
 });
 
+/**
+ * Validate donation status
+ */
+router.post('/donations/status', async (req, res) => {
+  try {
+    const donationStatus = await donationService.validate(req.body);
+    res.json(donationStatus);
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
+
 module.exports = router;

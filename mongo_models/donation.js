@@ -14,6 +14,7 @@ const schemaConfig = {
     type: String,
     enum: ['INITIATED', 'FAILED', 'SUCCESS', 'DISBURSED']
   },
+  memo: String,
   created_at: String,
   created_ts: Number,
   deleted_at: String,
