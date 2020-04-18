@@ -132,10 +132,10 @@ async function validate_payment(donation) {
  */
 async function clientDonationRecord( donation ) {
 
-  // call a ben ids to mongoose objects
+  // conv. ben ids to mongoose objects
   let beneficiary_ids = donation.beneficiary_ids;
   beneficiary_ids = beneficiary_ids.map(id => {
-    return mongoose.Types.ObjectId("5e9b78595d935a2468c74558")
+    return mongoose.Types.ObjectId(id)
   });
 
   // get beneficiary names
