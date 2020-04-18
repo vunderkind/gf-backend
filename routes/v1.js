@@ -42,7 +42,7 @@ router.get('/admin/people', authVerifClosure({superadmin: 1, admin: 1}), async (
 
 });
 
-router.get('/beneficiaries/:beneficiary_id/update-subaccount', async (req, res) => {
+router.put('/beneficiaries/:beneficiary_id/update-subaccount', async (req, res) => {
 
   try {
     const subaccount_id = await beneficiaryService.updateSubaccount(req.params);
