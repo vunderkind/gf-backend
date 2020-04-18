@@ -1,6 +1,7 @@
 const morx = require('morxv2');
 const q = require('q');
 const Beneficiary = require('../../mongo_models/beneficiary');
+const createSubaccount = require('./createsubaccount');
 
 const spec = morx
   .spec({})
@@ -12,6 +13,7 @@ const spec = morx
   .build('email', 'validators:isEmail')
   .build('context', 'required:1')
   .build('bankName', 'required:1')
+  .build('accountBank', 'required:1')
   .build('bvn', 'required:1')
   .build('verificationImage', 'eg:abab')
   .build('accountNumber', 'required:1')
@@ -38,6 +40,9 @@ function service(data) {
     params.email = params.email || 'N/A';
 
     const newBeneficiary = await new Beneficiary(params).save();
+    createSubaccount({
+      beneficiary_id: newBeneficiary._id
+    });
 
     d.resolve({
       firstName: newBeneficiary.firstName,

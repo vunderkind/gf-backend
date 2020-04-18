@@ -12,9 +12,14 @@ const schemaConfig = {
   },
   context: String,
   bankName: String,
+  accountBank: String,
   accountNumber: String,
   accountName: String,
   paymentLink: String,
+  subaccount: {
+    type: String,
+    unique: true
+  },
   location: String,
   bvn: String,
   verificationImage: String,
