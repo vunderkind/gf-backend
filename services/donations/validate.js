@@ -77,14 +77,14 @@ async function validate_payment(donation) {
     headers: { "Content-Type": "application/json" }
   }
   let body = {
-    "SECKEY": process.env.FLUTTERWAVE_SEC_KEY,
+    "SECKEY": process.env.FLWSECRETKEY,
     "txref": donation.reference
   }
 
   let result = {};
 
   try {
-    const flwResponse = await axios.post(process.env.FLW_VERIFY_ENDPOINT, body, config);
+    const flwResponse = await axios.post(process.env.FLWPAYMENTVERIFYURL, body, config);
 
     const payment_info = flwResponse.data.data;
 
