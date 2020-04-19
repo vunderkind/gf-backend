@@ -21,6 +21,7 @@
   "homepage": "https://github.com/vunderkind/good-faith#readme",
   "dependencies": {
     "api-key-auth": "^0.2.2",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "1.7.0",
     "cors": "^2.8.5",

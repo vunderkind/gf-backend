@@ -42,10 +42,36 @@ router.get('/admin/people', authVerifClosure({superadmin: 1, admin: 1}), async (
 
 });
 
+router.put('/beneficiaries/:beneficiary_id/update-subaccount', async (req, res) => {
+
+  try {
+    const subaccount_id = await beneficiaryService.createSubaccount(req.params);
+    res.json({subaccount_id});
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+
+})
+
 router.get('/people', async (req, res) => {
 
   try {
     const beneficiaries = await beneficiaryService.list(req.query);
+    res.json(beneficiaries);
+  } catch (e) {
+    res.status(500).json({
+      message: 'Failed to get Beneficiaries'
+    });
+  }
+
+});
+
+router.get('/randomize-people', async (req, res) => {
+
+  try {
+    const beneficiaries = await beneficiaryService.randomize(req.query);
     res.json(beneficiaries);
   } catch (e) {
     res.status(500).json({
