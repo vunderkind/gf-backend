@@ -12,7 +12,7 @@ const schemaConfig = {
   },
   context: String,
   bankName: String,
-  accountBank: String,
+  bankCode: String,
   accountNumber: String,
   accountName: String,
   paymentLink: String,

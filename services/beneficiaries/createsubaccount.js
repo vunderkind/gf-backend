@@ -1,4 +1,3 @@
-//FLWSECK_TEST-946b52540e03b9de4e8b240c0c5a027c-x
 const morx = require('morxv2');
 const q = require('q');
 const Beneficiary = require('../../mongo_models/beneficiary');
@@ -21,14 +20,14 @@ function service(data, is_admin) {
     if(!beneficiary) throw new Error('Beneficiary not found');
 
     //If there's no bank code, return with an error
-    if(!beneficiary.accountBank) throw new Error('Beneficiary bank required');
+    if(!beneficiary.bankCode) throw new Error('Beneficiary bank required');
 
     //If a subaccount has already been added for the beneficiary, return with an error
     if(beneficiary.subaccount) throw new Error('Beneficiary already has a subaccount');
 
     //split type and value are default dummies. FE will pass actual values during a payment
     const subaccountPayload = {
-      account_bank: beneficiary.accountBank,
+      account_bank: beneficiary.bankCode,
       account_number: beneficiary.accountNumber,
       business_name: `${beneficiary.firstName} ${beneficiary.lastName}`,
       business_mobile: beneficiary.phone,

@@ -45,7 +45,7 @@ router.get('/admin/people', authVerifClosure({superadmin: 1, admin: 1}), async (
 router.put('/beneficiaries/:beneficiary_id/update-subaccount', async (req, res) => {
 
   try {
-    const subaccount_id = await beneficiaryService.updateSubaccount(req.params);
+    const subaccount_id = await beneficiaryService.createSubaccount(req.params);
     res.json({subaccount_id});
   } catch (e) {
     res.status(500).json({

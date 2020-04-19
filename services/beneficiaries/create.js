@@ -13,7 +13,7 @@ const spec = morx
   .build('email', 'validators:isEmail')
   .build('context', 'required:1')
   .build('bankName', 'required:1')
-  .build('accountBank', 'required:1')
+  .build('bankCode', 'required:1')
   .build('bvn', 'required:1')
   .build('verificationImage', 'eg:abab')
   .build('accountNumber', 'required:1')
