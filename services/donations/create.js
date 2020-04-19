@@ -28,11 +28,7 @@ function service(data) {
     params.reference = uuid.v4();
 
     const bens_valid = await validate_beneficiaries(params.beneficiary_ids);
-    if ( !bens_valid ) {
-      d.reject({
-        message: "Invalid beneficiary_ids, please retry"
-      });
-    }
+    if ( !bens_valid ) throw new Error("Invalid beneficiary_ids, please retry");
 
     const newDonation = await new Donation(params).save();
 

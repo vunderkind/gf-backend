@@ -111,7 +111,7 @@ async function validate_payment(donation) {
         })
     }
   } catch (error) {
-    if( error.isAxiosError == true ) {
+    if( error.isAxiosError ) {
       result = {
         "code": error.response.status,
         "status": "FAILED",
