@@ -3,6 +3,7 @@ const router = express.Router();
 
 const beneficiaryService = require('../services/beneficiaries');
 const userService = require('../services/users');
+const donationService = require('../services/donations');
 
 const authVerifClosure = require('../middlewares/authverifclosure');
 
@@ -136,5 +137,32 @@ router.put('/people/:id', authVerifClosure({superadmin: 1, admin: 1}), async (re
 
 });
 
+/**
+ * Handle donation creation request
+ */
+router.post('/donations', async (req, res) => {
+  try {
+    const newDonation = await donationService.create(req.body);
+    res.json(newDonation);
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
+
+/**
+ * Validate donation status
+ */
+router.post('/donations/status', async (req, res) => {
+  try {
+    const donationStatus = await donationService.validate(req.body);
+    res.json(donationStatus);
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
 
 module.exports = router;

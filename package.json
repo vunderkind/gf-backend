@@ -23,7 +23,7 @@
     "api-key-auth": "^0.2.2",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
-    "body-parser": "1.7.0",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -40,7 +40,8 @@
     "server": "^1.0.27",
     "sqlite3": "^4.1.1",
     "swagger-ui-express": "^2.0.13",
-    "sync-request": "^4.0.2"
+    "sync-request": "^4.0.2",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "acorn": "^7.1.1"
