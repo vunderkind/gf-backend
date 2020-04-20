@@ -36,7 +36,8 @@ function service(data, is_admin) {
 
     const randomSkipFrom = Math.floor(Math.random() * randomUpperBound);
     const beneficiaries = Beneficiary.find({
-      isVerified: true
+      isVerified: true,
+      subaccount: { $exists: true }
     }, {
       id: 1,
       firstName: 1,
@@ -46,7 +47,8 @@ function service(data, is_admin) {
       location:1,
       accountNumber :1,
       accountName :1,
-      paymentLink :1
+      paymentLink :1,
+      subaccount: 1
     }, {
       limit: params.count,
       skip: randomSkipFrom
