@@ -104,7 +104,7 @@ async function validate_payment(donation) {
 
         // cbn wants(takes) a piece of the pie from every nigerian merchant's txn :)
         // see here for more info https://flutterwave.com/us/blog/product-updates/cbns-stamp-duty-charge-a-flutterwave-merchants-guide
-        const cbnstampdutycharge = payment_info.chargedamount > 1000 ? 50 : 0;
+        const cbnstampdutycharge = payment_info.chargedamount >= 1000 ? 50 : 0;
 
         // this is to provide records on our side incase of disputes/fraud
         result['gw_response'] = JSON.stringify({
