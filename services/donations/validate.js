@@ -102,6 +102,10 @@ async function validate_payment(donation) {
           result['message'] = "Payment failed";
         }
 
+        // cbn wants(takes) a piece of the pie from every nigerian merchant's txn :)
+        // see here for more info https://flutterwave.com/us/blog/product-updates/cbns-stamp-duty-charge-a-flutterwave-merchants-guide
+        const cbnstampdutycharge = payment_info.chargedamount > 1000 ? 50 : 0;
+
         // this is to provide records on our side incase of disputes/fraud
         result['gw_response'] = JSON.stringify({
           "chargedamount": payment_info.chargedamount,
@@ -110,7 +114,8 @@ async function validate_payment(donation) {
           "paymenttype": payment_info.paymenttype,
           "processingfee": payment_info.appfee,
           "amountsettled": payment_info.amountsettledforthistransaction,
-          "paymentmeta": payment_info.meta
+          "paymentmeta": payment_info.meta,
+          "cbnstampdutycharge": cbnstampdutycharge 
         })
     }
   } catch (error) {
@@ -154,25 +159,49 @@ async function clientDonationRecord( donation ) {
     }
   })
 
-  // get the memo
-  const recipient_count = beneficiary_ids.length;
-  const payment_memo = JSON.parse(donation.memo)
-  let single_amount = +( parseInt(payment_memo.amountsettled) / recipient_count ).toFixed(2)
+  let processingfee = null;
+  let cdbstampdutycharge = null;
 
-  beneficiaries = beneficiaries.map(b => {
-    return {
-      firstName: b.firstName,
-      lastName: b.lastName,
-      amtRecvd: single_amount
+  if( donation.status === "SUCCESS" ) {
+    // get the split info
+    const payment_memo = JSON.parse(donation.memo)
+    processingfee = payment_memo.processingfee
+    cbnstampdutycharge = payment_memo.cbnstampdutycharge
+
+    let payment_meta = payment_memo.paymentmeta;
+    let split_info = {}
+
+    // search for the `split_settlement_info` only
+    for (let i =0; i< payment_meta.length; i++) {
+      if( payment_meta[i].metaname == "split_settlement_info" ) {
+        split_info = JSON.parse( payment_meta[i].metavalue );
+        break;
+      }
     }
-  });
+
+    beneficiaries = beneficiaries.map(b => {
+      return {
+        firstName: b.firstName,
+        lastName: b.lastName,
+        amtRecvd: split_info[b.subaccount].subaccount_earning
+      }
+    });
+  } else {
+    beneficiaries = beneficiaries.map(b => {
+      return {
+        firstName: b.firstName,
+        lastName: b.lastName,
+      }
+    });
+  }
 
   const formatted_response = {
     'donor': donation.donor,
     'status': donation.status,
     'reference': donation.reference,
     'amount': donation.amount,
-    'fee': payment_memo.processingfee,
+    'fee': processingfee,
+    'cbnstampdutycharge': cbnstampdutycharge,
     'beneficiaries': beneficiaries
   }
 
