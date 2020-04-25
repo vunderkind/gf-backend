@@ -88,6 +88,8 @@ async function validate_payment(donation) {
 
     const payment_info = flwResponse.data.data;
 
+    console.log(payment_info)
+
     result = {
       "code": flwResponse.status
     };
@@ -160,7 +162,7 @@ async function clientDonationRecord( donation ) {
   })
 
   let processingfee = null;
-  let cdbstampdutycharge = null;
+  let cbnstampdutycharge = null;
 
   if( donation.status === "SUCCESS" ) {
     // get the split info
@@ -169,7 +171,7 @@ async function clientDonationRecord( donation ) {
     cbnstampdutycharge = payment_memo.cbnstampdutycharge
 
     let payment_meta = payment_memo.paymentmeta;
-    let split_info = {}
+    let split_info = null;
 
     // search for the `split_settlement_info` only
     for (let i =0; i< payment_meta.length; i++) {
@@ -179,11 +181,20 @@ async function clientDonationRecord( donation ) {
       }
     }
 
+    // add fail safe
+    let single_amount;
+    if( !split_info ) {
+      const amountleft = payment_memo.chargedamount - processingfee - cbnstampdutycharge;
+      // now split amount left by recipients
+      single_amount = +( parseInt(amountleft) / beneficiary_ids.length ).toFixed(2)
+    }
+
+
     beneficiaries = beneficiaries.map(b => {
       return {
         firstName: b.firstName,
         lastName: b.lastName,
-        amtRecvd: split_info[b.subaccount].subaccount_earning
+        amtRecvd: split_info ? split_info[b.subaccount].subaccount_earning : single_amount
       }
     });
   } else {
