@@ -107,7 +107,10 @@ async function validate_payment(donation) {
           "chargedamount": payment_info.chargedamount,
           "ip": payment_info.ip,
           "fraudstatus": payment_info.fraudstatus,
-          "paymenttype": payment_info.paymenttype
+          "paymenttype": payment_info.paymenttype,
+          "processingfee": payment_info.appfee,
+          "amountsettled": payment_info.amountsettledforthistransaction,
+          "paymentmeta": payment_info.meta
         })
     }
   } catch (error) {
@@ -151,10 +154,16 @@ async function clientDonationRecord( donation ) {
     }
   })
 
+  // get the memo
+  const recipient_count = beneficiary_ids.length;
+  const payment_memo = JSON.parse(donation.memo)
+  let single_amount = +( parseInt(payment_memo.amountsettled) / recipient_count ).toFixed(2)
+
   beneficiaries = beneficiaries.map(b => {
     return {
       firstName: b.firstName,
-      lastName: b.lastName
+      lastName: b.lastName,
+      amtRecvd: single_amount
     }
   });
 
@@ -163,6 +172,7 @@ async function clientDonationRecord( donation ) {
     'status': donation.status,
     'reference': donation.reference,
     'amount': donation.amount,
+    'fee': payment_memo.processingfee,
     'beneficiaries': beneficiaries
   }
 
