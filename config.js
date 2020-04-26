@@ -1,4 +1,8 @@
-const whitelist = ['http://localhost:3000', 'https://angelsamong.us/']
+let whitelist = ['https://angelsamong.us/', 'https://angelspeople.glitch.me/']
+
+if (process.env.ISPROD === "FALSE") {
+  whitelist.push( "http://localhost:3000" );
+}
 
 module.exports = {
   cors: {

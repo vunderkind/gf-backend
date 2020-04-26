@@ -47,7 +47,8 @@ function service(data, is_admin) {
           bankName: b.bankName,
           accountNumber: b.accountNumber,
           accountName: b.accountName,
-          paymentLink: b.paymentLink
+          paymentLink: b.paymentLink,
+          subaccount: b.subaccount
         }
       });
     }
