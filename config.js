@@ -1,6 +1,6 @@
 let whitelist = ['https://angelsamong.us/', 'https://angelspeople.glitch.me/']
 
-if (process.env.ISPROD !== "TRUE") {
+if (process.env.ISPROD === "FALSE") {
   whitelist.push( "http://localhost:3000" );
 }
 
