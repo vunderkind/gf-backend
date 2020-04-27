@@ -23,7 +23,8 @@ function service(data, is_admin) {
     }
 
     const totalBeneficiaries = await Beneficiary.countDocuments({
-      isVerified: true
+      isVerified: true,
+      subaccount: { $exists: true }
     });
 
     //Todo: consider using $sample and handling edge cases
