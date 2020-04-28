@@ -207,7 +207,8 @@ async function clientDonationRecord( donation ) {
   }
 
   const formatted_response = {
-    'donor': donation.donor,
+    'donorEmail': donation.donorEmail,
+    'donorName': donation.donorName,
     'status': donation.status,
     'reference': donation.reference,
     'amount': donation.amount,

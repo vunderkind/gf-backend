@@ -7,7 +7,8 @@ const Beneficiary = require('../../mongo_models/beneficiary');
 
 const spec = morx
   .spec({})
-  .build('donor', 'required:1, validators:isEmail')
+  .build('donorEmail', 'required:1, validators:isEmail')
+  .build('donorName', 'required:1')
   .build('amount', 'required:1')
   .build('beneficiary_ids', 'required:1')
   .build('source', 'required:1')
