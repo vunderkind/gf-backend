@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const modelName = 'donation';
 const { Schema } = mongoose;
 const schemaConfig = {
-  donor: String,
+  donorEmail: String,
+  donorName: String,
   amount: Number,
   reference: String,
   beneficiary_ids: [ String ],
