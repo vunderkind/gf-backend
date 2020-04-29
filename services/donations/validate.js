@@ -202,6 +202,7 @@ async function clientDonationRecord( donation ) {
       return {
         firstName: b.firstName,
         lastName: b.lastName,
+        phone: b.phone
       }
     });
   }
