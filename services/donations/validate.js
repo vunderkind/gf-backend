@@ -40,12 +40,14 @@ function service(data) {
       // validate payment from provider & update records
       const donation_res = await validate_payment(donation);
 
-      if( donation_res.code !== 400 && donation_res.code !== 500 ) {
-        // 400 - will usually occur when the user never completed payment
-        // we don't want to mark initiations as failed
+      if( donation_res.code === 200 ) {
+        // update status only when call to flw api is successful
         donation.status = donation_res.status;
+        donation.memo = donation_res.gw_response;
+      } else {
+        // log the whole response object is something goes wrong
+        donation.memo = donation_res;
       }
-      donation.memo = donation_res.gw_response;
       await donation.save();
 
       d.resolve( clientDonationRecord(donation) );
