@@ -196,7 +196,8 @@ async function clientDonationRecord( donation ) {
       return {
         firstName: b.firstName,
         lastName: b.lastName,
-        amtRecvd: split_info ? split_info[b.subaccount].subaccount_earning : single_amount
+        amtRecvd: split_info ? split_info[b.subaccount].subaccount_earning : single_amount,
+        phone: b.phone
       }
     });
   } else {
@@ -204,7 +205,6 @@ async function clientDonationRecord( donation ) {
       return {
         firstName: b.firstName,
         lastName: b.lastName,
-        phone: b.phone
       }
     });
   }
