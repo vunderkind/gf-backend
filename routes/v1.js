@@ -165,4 +165,21 @@ router.post('/donations/status', async (req, res) => {
   }
 });
 
+router.post('/payment-hooks/flutterwave', async (req, res) => {
+
+  try {
+    await donationService.hook({
+      hookData: req.body
+    });
+    res.json({
+      hook_acknowledged: 200
+    });
+  } catch (e) {
+    res.json({
+      hook_acknowledged: 400
+    });
+  }
+
+})
+
 module.exports = router;

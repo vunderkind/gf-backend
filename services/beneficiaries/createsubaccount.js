@@ -34,7 +34,7 @@ function service(data, is_admin) {
       business_email: beneficiary.email,
       country: 'NG',
       split_type: 'flat',
-      split_value: 1,
+      split_value: '0',
       seckey: process.env.FLWSECRETKEY
     }
 
