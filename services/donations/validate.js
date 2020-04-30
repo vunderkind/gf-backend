@@ -46,7 +46,9 @@ function service(data) {
         donation.memo = donation_res.gw_response;
       } else {
         // log the whole response object is something goes wrong
-        donation.memo = donation_res;
+        donation.memo = JSON.stringify(donation_res);
+        console.log("Unable to validate payment - see api response");
+        console.log(donation_res);
       }
       await donation.save();
 
