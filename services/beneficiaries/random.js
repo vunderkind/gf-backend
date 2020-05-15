@@ -1,11 +1,12 @@
 const morx = require('morxv2');
 const q = require('q');
+const mongoose = require('mongoose');
 const Beneficiary = require('../../mongo_models/beneficiary');
 const DEFAULT_COUNT = process.env.DEFAULT_COUNT || 10;
 
 const spec = morx
   .spec({})
-  .build('count', 'eg:gtb')
+  .build('count', 'eg:5')
   .end();
 
 function service(data, is_admin) {
@@ -22,24 +23,12 @@ function service(data, is_admin) {
       params.count = DEFAULT_COUNT;
     }
 
-    const totalBeneficiaries = await Beneficiary.countDocuments({
+    const filters = {
       isVerified: true,
       subaccount: { $exists: true }
-    });
-
-    //Todo: consider using $sample and handling edge cases
-    // skip option is not so effective
-
-    let randomUpperBound = params.count;
-    if (totalBeneficiaries > params.count) {
-      randomUpperBound = totalBeneficiaries - params.count;
     }
 
-    const randomSkipFrom = Math.floor(Math.random() * randomUpperBound);
-    const beneficiaries = Beneficiary.find({
-      isVerified: true,
-      subaccount: { $exists: true }
-    }, {
+    const result_schema = {
       id: 1,
       firstName: 1,
       lastName :1,
@@ -50,11 +39,13 @@ function service(data, is_admin) {
       accountName :1,
       paymentLink :1,
       subaccount: 1
-    }, {
-      limit: params.count,
-      skip: randomSkipFrom
-    });
+    }
 
+    let beneficiaries = await getRandomUniqueBeneficiaries(
+      filters,
+      result_schema,
+      params.count
+    );
 
     d.resolve(beneficiaries);
 
@@ -64,6 +55,77 @@ function service(data, is_admin) {
     });
 
   return d.promise;
+}
+
+/**
+ * This leverages the mongodb `$sample` operator.
+ * 
+ * We need to handle potential dupes per: 
+ * https://docs.mongodb.com/manual/reference/operator/aggregation/sample/#behavior
+ * 
+ * To this, we incrementally re-seed the returned beneficiaries, keeping the
+ * unique values at every step until we're sure we have full unique list of beneficiaries
+ * 
+ * @param {T} filters 
+ * @param {T} result_schema
+ * @param {*} count 
+ */
+async function getRandomUniqueBeneficiaries(filters, result_schema, count) {
+  let beneficiaries = await Beneficiary.aggregate([
+    { $match: filters },
+    { $project: result_schema },
+    { $sample: { size: count } }
+  ]);
+
+  let reseed_params = getReseedParams( beneficiaries );
+  do {
+    if( reseed_params.reseed_size != 0 ) {
+      // this means we have duplicates and we need to get extra records
+      // get a new sample with a twist...
+      // update the filters to exclude unique ids then fetch
+      filters['_id'] = { $nin: reseed_params.unique_ids }
+
+      const reseed_bens = await Beneficiary.aggregate([
+        { $match: filters },
+        { $project: result_schema },
+        { $sample: { size: reseed_params.count } }
+      ]);
+
+      // now that we have both, we need to merge them and only get unique entries
+      beneficiaries = [... new Set( [].concat( beneficiaries, reseed_bens ) ) ];
+
+      // update ressed params
+      reseed_params = getReseedParams( beneficiaries );
+    }
+  } while ( reseed_params.reseed_size != 0 );
+
+  return beneficiaries;
+}
+
+/**
+ * Accepts an array of beneficiary ids and returns a json containing
+ * 
+ * {
+ *  reseed_size - number of duplicates,
+ *  unique_ids - array of unique ids
+ * }
+ * 
+ * @param {*} beneficiaries 
+ */
+function getReseedParams (beneficiaries) {
+  // get chosen ids from result set
+  const chosen_ids = [];
+  beneficiaries.forEach(function(beneficiary) {
+    chosen_ids.push( mongoose.Types.ObjectId(beneficiary._id) );
+  });
+
+  // get unique beneficiaries returned
+  const unique_ids = [... new Set(chosen_ids)];
+
+  // check for duplicates
+  const duplicate_count = chosen_ids.length - unique_ids.length;
+
+  return { unique_ids: unique_ids, reseed_size: duplicate_count };
 }
 
 service.morxspc = spec;
